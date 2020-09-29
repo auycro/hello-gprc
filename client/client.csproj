@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\Protos\*.proto" OutputDir="%(RelativePath)models\" />
+    <Protobuf Include="..\protos\*.proto" OutputDir="%(RelativePath)models\" />
   </ItemGroup>
 
 </Project>
