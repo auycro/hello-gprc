@@ -1,0 +1,12 @@
+﻿{
+  "profiles": {
+    "tmpGRPC": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "applicationUrl": "https://127.0.0.1:5001",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
