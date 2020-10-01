@@ -21,12 +21,12 @@ namespace client
 
             //var client = new HelloService.HelloServiceClient(channel);
             var client = new Greeter.GreeterClient(channel);
-            var user = new Greeting(){
-                FirstName = "Foo",
-                LastName = "Bar"
-            };
+            
             var request = new GreetRequest() {
-                Greeting = user
+                Greeting = new Greeting(){
+                    FirstName = "Foo",
+                    LastName = "Bar"
+                }
             };
             var response = client.SayHello(request);
             Console.WriteLine(response.Message);
