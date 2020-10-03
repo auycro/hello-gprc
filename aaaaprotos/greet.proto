@@ -24,3 +24,7 @@ message GreetRequest {
 message GreetReply {
   string message = 1;
 }
+
+message GreetManyTimesRequest {
+	Greeting greeting = 1;
+}
