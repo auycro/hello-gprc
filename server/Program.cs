@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using Grpc.Core;
-using server.services;
+using server.controller;
 
 namespace server
 {
@@ -17,7 +17,8 @@ namespace server
                 server = new Server()
                 {
                     Services = {
-                        Greet.Greeter.BindService(new GreetingService()),
+                        UserCode.BarcodeService.BindService(new BarcodeController()),
+                        Greet.Greeter.BindService(new GreetingController()),
                     },
                     Ports = { new ServerPort("localhost", Port, ServerCredentials.Insecure) }
                 };

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package user_code;
+
+// BarcodeService
+service BarcodeService {
+  // Unary
+  rpc GetBarcode (Filter) returns (Barcode);
+  // Server streaming
+  rpc GetBarcodes (Filter) returns (stream Barcode);
+}
+
+message Filter {
+  string query = 1;
+}
+
+message Barcode {
+    string user = 1;
+    string service_type = 2;
+    string barcode_num = 3;
+}

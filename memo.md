@@ -43,7 +43,7 @@ server.csproj|client.csproj
 ```
 
 ```
-$ dotnet new proto -n classroom
+$ dotnet new proto -n barcode
 ```
 
 ### Reference Repo

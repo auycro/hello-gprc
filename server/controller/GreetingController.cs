@@ -6,9 +6,9 @@ using Grpc.Core;
 using Greet;
 //using Microsoft.Extensions.Logging;
 
-namespace server.services
+namespace server.controller
 {
-    public class GreetingService: Greeter.GreeterBase
+    public class GreetingController: Greeter.GreeterBase
     {
         //private readonly ILogger<GreeterService> _logger;
         //public GreeterService(ILogger<GreeterService> logger)
