@@ -52,3 +52,5 @@ istio dotnet sample: https://github.com/cushind/aspnetcore-istio
 kubernetes dotnet sample: https://github.com/jtattermusch/grpc-authentication-kubernetes-examples
 dotnet sample: https://github.com/Clement-Jean/grpc-csharp-course
 kubernetes golang sample: https://github.com/kelseyhightower/grpc-hello-service
+
+gRPC gateway:  https://github.com/grpc-ecosystem/grpc-gateway
