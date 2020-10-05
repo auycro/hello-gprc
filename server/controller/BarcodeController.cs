@@ -28,13 +28,19 @@ namespace server.controller
             string query = $"{request.Query}";
             Console.WriteLine($"The server received the request : {query}");
 
+            Random generator = new Random();
+
             foreach (int i in Enumerable.Range(1, 10))
             {
-                await responseStream.WriteAsync(new Barcode() { 
+                String random_barcode = generator.Next(0, 99999).ToString("D5");
+
+                var result = new Barcode(){
                     User = "190299282",
                     ServiceType = "7eleven",
-                    BarcodeNum = "109293283723" 
-                });
+                    BarcodeNum = random_barcode 
+                };
+
+                await responseStream.WriteAsync(result);
             }
         } 
         

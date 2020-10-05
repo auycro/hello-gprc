@@ -11,7 +11,7 @@ namespace client
     class Program
     {
         const string target = "127.0.0.1:5001";
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Channel channel = new Channel("localhost", 5001, ChannelCredentials.Insecure);
 
@@ -27,7 +27,7 @@ namespace client
             CallUnary(channel);
 
             //Server streaming
-            CallServerStreaming(channel);
+            await CallServerStreaming(channel);
 
             channel.ShutdownAsync().Wait();
             Console.ReadKey();
@@ -47,7 +47,7 @@ namespace client
             Console.WriteLine("End CallUnary");
         }
 
-        public static async void CallServerStreaming(Channel channel){
+        public static async Task CallServerStreaming(Channel channel){
             Console.WriteLine("Start CallServerStreaming");
             var filter = new UserCode.Filter()
             {
