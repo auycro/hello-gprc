@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package status;
+
+service StatusService {}
+
+enum StatusCode {
+    Unknown = 0;
+    Ok = 1;
+    Failed = 2;
+}

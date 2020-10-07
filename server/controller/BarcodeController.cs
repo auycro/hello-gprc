@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using Grpc.Core;
 using UserCode;
 
@@ -42,7 +44,27 @@ namespace server.controller
 
                 await responseStream.WriteAsync(result);
             }
-        } 
-        
+        }
+
+        public override async Task<Result> UploadFiles(Grpc.Core.IAsyncStreamReader<Chunks> requestStream, Grpc.Core.ServerCallContext context)
+        {
+            Result result = new Result(){
+                StatusCode = Status.StatusCode.Unknown,
+                Message = "Unknown"
+            };
+            //Path SERVER_BASE_PATH = Paths.get("uploads/");
+            string filename = $"{Path.GetRandomFileName()}{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.txt";
+            FileStream fs = File.Create(filename);
+            byte[] fileByte = null;
+            while (await requestStream.MoveNext())
+            {
+                //fileByte = requestStream.Current.Content.ToByteArray();
+                fs.WriteAsync(requestStream.Current.Content.ToByteArray());                
+            }
+            result.StatusCode = Status.StatusCode.Ok;
+            result.Message = "Save Complete";
+            Console.WriteLine($"{filename} has been saved.");
+            return result;
+        }
     }
 }

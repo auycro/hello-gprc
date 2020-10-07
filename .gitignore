@@ -37,5 +37,5 @@ msbuild.wrn
 .vs/
 
 # Ignore Autogenerate
-!.gitkeep
 [Mm]odels/
+[Tt]mp/

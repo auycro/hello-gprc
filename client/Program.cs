@@ -24,17 +24,20 @@ namespace client
             //var client = new HelloService.HelloServiceClient(channel);
                         
             //Unary
-            CallUnary(channel);
+            //CallUnary(channel);
 
             //Server streaming
-            await CallServerStreaming(channel);
+            //await CallServerStreaming(channel);
 
+            //Client streaming
+            await CallClientStreaming(channel);
+            
             channel.ShutdownAsync().Wait();
             Console.ReadKey();
         }
 
         public static void CallUnary(Channel channel){
-            Console.WriteLine("Start CallUnary");
+            Console.WriteLine("Start Unary");
             var client_greeter = new Greeter.GreeterClient(channel);
             var request = new GreetRequest() {
                 Greeting = new Greeting(){
@@ -44,11 +47,11 @@ namespace client
             };
             var response = client_greeter.SayHello(request);
             Console.WriteLine(response.Message);
-            Console.WriteLine("End CallUnary");
+            Console.WriteLine("End Unary");
         }
 
         public static async Task CallServerStreaming(Channel channel){
-            Console.WriteLine("Start CallServerStreaming");
+            Console.WriteLine("Start ServerStreaming");
             var filter = new UserCode.Filter()
             {
                 Query = "{user_id:'10938432'}"
@@ -65,7 +68,24 @@ namespace client
                 Console.WriteLine($"{i}: {barcode.BarcodeNum}");
                 await Task.Delay(200);
             }
-            Console.WriteLine("End CallServerStreaming");
+            Console.WriteLine("End ServerStreaming");
+        }
+
+        public static async Task CallClientStreaming(Channel channel){
+            Console.WriteLine("Start ClientStreaming");
+            
+            //var request = new () { Greeting = greeting };
+            var barcode_service = new UserCode.BarcodeService.BarcodeServiceClient(channel);
+            var request_stream = barcode_service.UploadFiles();
+
+            for (var i = 0; i < 3; i++)
+            {
+                //await request_stream.RequestStream.WriteAsync(new Chunks { Content =  });
+            }
+            await request_stream.RequestStream.CompleteAsync();
+            //await request_stream.RequestStream();
+
+            Console.WriteLine("End ClientStreaming");
         }
     }
 }

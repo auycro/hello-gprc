@@ -54,3 +54,5 @@ dotnet sample: https://github.com/Clement-Jean/grpc-csharp-course
 kubernetes golang sample: https://github.com/kelseyhightower/grpc-hello-service
 
 gRPC gateway:  https://github.com/grpc-ecosystem/grpc-gateway
+gRPC with Rest: https://docs.microsoft.com/en-us/aspnet/core/grpc/httpapi?view=aspnetcore-3.1
+gRPC with Rest: http://james.newtonking.com/archive/2020/03/31/introducing-grpc-http-api

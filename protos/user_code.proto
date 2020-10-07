@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "status.proto";
+
 package user_code;
 
 // BarcodeService
@@ -8,6 +10,8 @@ service BarcodeService {
   rpc GetBarcode (Filter) returns (Barcode);
   // Server streaming
   rpc GetBarcodes (Filter) returns (stream Barcode);
+  // Client streming
+  rpc UploadFiles (stream Chunks) returns (Result);
 }
 
 message Filter {
@@ -15,7 +19,16 @@ message Filter {
 }
 
 message Barcode {
-    string user = 1;
-    string service_type = 2;
-    string barcode_num = 3;
+  string user = 1;
+  string service_type = 2;
+  string barcode_num = 3;
+}
+
+message Result {
+  status.StatusCode status_code = 1;
+  string message = 2;
+}
+
+message Chunks {
+  bytes content = 1;
 }
