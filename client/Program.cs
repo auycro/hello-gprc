@@ -1,10 +1,12 @@
 ﻿//using Hello;
 using Grpc.Core;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Greet;
 using UserCode;
+using Google.Protobuf;
 
 namespace client
 {
@@ -78,12 +80,30 @@ namespace client
             var barcode_service = new UserCode.BarcodeService.BarcodeServiceClient(channel);
             var request_stream = barcode_service.UploadFiles();
 
-            for (var i = 0; i < 3; i++)
+            int MaxChunkSize = 256;
+            byte[] chunk = new byte[MaxChunkSize];
+
+            string filename = @"./tmp/lorem.txt";
+            //int i=0;
+            using (FileStream fsIn = File.OpenRead(filename))
             {
-                //await request_stream.RequestStream.WriteAsync(new Chunks { Content =  });
+                //read in ~1 MB chunks
+                int bufferLen = 128; //1048576;
+                byte[] buffer = new byte[bufferLen];
+                long bytesRead;
+                do
+                {
+                    bytesRead = fsIn.Read(buffer, 0, bufferLen);
+                    var chunks = new Chunks(){ Content = ByteString.CopyFrom(buffer) };
+                    
+                    //i++;
+                    //string tmp = System.Text.Encoding.UTF8.GetString(buffer);
+                    //Console.WriteLine($"${i}:{tmp}");
+                    
+                    await request_stream.RequestStream.WriteAsync(chunks);
+                } while (bytesRead != 0);
             }
             await request_stream.RequestStream.CompleteAsync();
-            //await request_stream.RequestStream();
 
             Console.WriteLine("End ClientStreaming");
         }

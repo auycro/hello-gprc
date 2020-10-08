@@ -53,14 +53,35 @@ namespace server.controller
                 Message = "Unknown"
             };
             //Path SERVER_BASE_PATH = Paths.get("uploads/");
-            string filename = $"{Path.GetRandomFileName()}{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.txt";
-            FileStream fs = File.Create(filename);
+            string filename = Path.Combine(@"./tmp/",$"{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}{Path.GetRandomFileName()}.txt");
+            //FileStream fs = File.Create(filename);
             byte[] fileByte = null;
+            //while (await requestStream.MoveNext())
+            //{
+            //    fileByte = requestStream.Current.Content.ToByteArray();
+            //    var tmp = System.Text.Encoding.UTF8.GetString(fileByte);
+            //    Console.WriteLine(tmp.ToString());
+            //    fs.Write(fileByte);                
+            //}
+            
+            //using (StreamWriter outputFile = new StreamWriter(filename, true) )
+            //{
+                //await outputFile.WriteAsync(content);
+            //    while (await requestStream.MoveNext())
+            //    {
+            //        fileByte = requestStream.Current.Content.ToByteArray();
+            //        outputFile.Write(fileByte);
+            //    }
+            //}
             while (await requestStream.MoveNext())
             {
-                //fileByte = requestStream.Current.Content.ToByteArray();
-                fs.WriteAsync(requestStream.Current.Content.ToByteArray());                
+                fileByte = requestStream.Current.Content.ToByteArray();
+                using (var stream = new FileStream(filename, FileMode.Append))
+                {
+                    stream.Write(fileByte, 0, fileByte.Length);
+                }
             }
+
             result.StatusCode = Status.StatusCode.Ok;
             result.Message = "Save Complete";
             Console.WriteLine($"{filename} has been saved.");
