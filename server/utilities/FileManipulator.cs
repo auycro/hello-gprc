@@ -3,7 +3,7 @@ using System.IO;
 
 namespace server.utilities
 {
-    public class FileManipulator
+    static class FileManipulator
     {
         public static bool ByteArrayToFile(string fileName, byte[] byteArray)
         {

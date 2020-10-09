@@ -76,7 +76,6 @@ namespace client
         public static async Task CallClientStreaming(Channel channel){
             Console.WriteLine("Start ClientStreaming");
             
-            //var request = new () { Greeting = greeting };
             var barcode_service = new UserCode.BarcodeService.BarcodeServiceClient(channel);
             var request_stream = barcode_service.UploadFiles();
 
@@ -84,27 +83,26 @@ namespace client
             byte[] chunk = new byte[MaxChunkSize];
 
             string filename = @"./tmp/lorem.txt";
-            //int i=0;
+            int i=0;
             using (FileStream fsIn = File.OpenRead(filename))
             {
                 //read in ~1 MB chunks
                 int bufferLen = 128; //1048576;
                 byte[] buffer = new byte[bufferLen];
-                long bytesRead;
-                do
+                while (fsIn.Read(buffer, 0, bufferLen) > 1)
                 {
-                    bytesRead = fsIn.Read(buffer, 0, bufferLen);
                     var chunks = new Chunks(){ Content = ByteString.CopyFrom(buffer) };
                     
-                    //i++;
-                    //string tmp = System.Text.Encoding.UTF8.GetString(buffer);
-                    //Console.WriteLine($"${i}:{tmp}");
+                    i++;
+                    string tmp = System.Text.Encoding.UTF8.GetString(buffer);
+                    Console.WriteLine($"${i}:{tmp}");
                     
                     await request_stream.RequestStream.WriteAsync(chunks);
-                } while (bytesRead != 0);
-            }
-            await request_stream.RequestStream.CompleteAsync();
-
+                    Array.Clear(buffer, 0, buffer.Length);
+                    //await Task.Delay(1000);
+                }
+                await request_stream.RequestStream.CompleteAsync();
+            }            
             Console.WriteLine("End ClientStreaming");
         }
     }
