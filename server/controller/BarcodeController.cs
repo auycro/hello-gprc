@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using Grpc.Core;
+using Google.Protobuf;
 using UserCode;
 
 namespace server.controller
@@ -61,6 +62,7 @@ namespace server.controller
                 fileByte = server.utilities.ByteArrayExtensions.Trim(fileByte);
                 //string tmp = System.Text.Encoding.UTF8.GetString(fileByte);
                 //Console.WriteLine($"{tmp}");
+                //Console.WriteLine($"context:{context.ToString()}");
                 using (var stream = new FileStream(filename, FileMode.Append))
                 {
                     stream.Write(fileByte, 0, fileByte.Length);
@@ -71,6 +73,24 @@ namespace server.controller
             result.Message = "Save Complete";
             Console.WriteLine($"{filename} has been saved.");
             return result;
+        }
+
+        public override async Task Chat(Grpc.Core.IAsyncStreamReader<ChatMessage> requestStream, 
+                                  Grpc.Core.IServerStreamWriter<Google.Protobuf.WellKnownTypes.StringValue> responseStream, 
+                                  Grpc.Core.ServerCallContext context)
+        {
+            var result = new Google.Protobuf.WellKnownTypes.StringValue();
+            string[] random_word = {"Hello", "G'day", "Please!", "Okay", "Perfect!", "NVM"};
+            Random generator = new Random();
+            
+            while (await requestStream.MoveNext())
+            {
+                string response_text = $"{requestStream.Current.Name}, {random_word[generator.Next(0, 5)]}";
+                Console.WriteLine($"response_text: {response_text}");
+                result.Value = response_text;
+                await responseStream.WriteAsync(result);
+                //await Task.Delay(2000);
+            }
         }
     }
 }

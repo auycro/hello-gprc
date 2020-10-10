@@ -32,8 +32,11 @@ namespace client
             //await CallServerStreaming(channel);
 
             //Client streaming
-            await CallClientStreaming(channel);
+            //await CallClientStreaming(channel);
             
+            //BiDirection Streaming
+            await CallBiDirectionStreaming(channel);
+
             channel.ShutdownAsync().Wait();
             Console.ReadKey();
         }
@@ -93,9 +96,9 @@ namespace client
                 {
                     var chunks = new Chunks(){ Content = ByteString.CopyFrom(buffer) };
                     
-                    i++;
-                    string tmp = System.Text.Encoding.UTF8.GetString(buffer);
-                    Console.WriteLine($"${i}:{tmp}");
+                    //i++;
+                    //string tmp = System.Text.Encoding.UTF8.GetString(buffer);
+                    //Console.WriteLine($"${i}:{tmp}");
                     
                     await request_stream.RequestStream.WriteAsync(chunks);
                     Array.Clear(buffer, 0, buffer.Length);
@@ -103,7 +106,42 @@ namespace client
                 }
                 await request_stream.RequestStream.CompleteAsync();
             }            
+            Result response = await request_stream.ResponseAsync;
+            Console.WriteLine($"{response.StatusCode}:{response.Message}");
             Console.WriteLine("End ClientStreaming");
+        }
+
+        public static async Task CallBiDirectionStreaming(Channel channel){
+            Console.WriteLine("Start BiDirectionStreaming");
+            var barcode_service = new UserCode.BarcodeService.BarcodeServiceClient(channel);
+            var request_stream = barcode_service.Chat();
+
+             var response_stream_action = Task.Run(async () =>
+            {
+                while (await request_stream.ResponseStream.MoveNext())
+                {
+                    Console.WriteLine($"Received {DateTime.Now.ToUniversalTime()}: {request_stream.ResponseStream.Current}");
+                }
+            });
+
+            ChatMessage[] chatMessages =
+            {
+                new ChatMessage() { Name = "John", Message = "Aww" },
+                new ChatMessage() { Name = "Jack", Message = "Eww" },
+                new ChatMessage() { Name = "Jimmy", Message = "Oww" }
+            };
+
+            foreach (var message in chatMessages)
+            {
+                Console.WriteLine($"Sending {DateTime.Now.ToUniversalTime()}: {message.ToString()}");
+                await request_stream.RequestStream.WriteAsync(message);
+                //await Task.Delay(500);
+            }
+
+            await request_stream.RequestStream.CompleteAsync();
+            await response_stream_action;
+
+            Console.WriteLine("End BiDirectionStreaming");
         }
     }
 }
