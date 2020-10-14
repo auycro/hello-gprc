@@ -26,13 +26,13 @@ namespace client
             //var client = new HelloService.HelloServiceClient(channel);
                         
             //Unary
-            //CallUnary(channel);
+            CallUnary(channel);
 
             //Server streaming
-            //await CallServerStreaming(channel);
+            await CallServerStreaming(channel);
 
             //Client streaming
-            //await CallClientStreaming(channel);
+            await CallClientStreaming(channel);
             
             //BiDirection Streaming
             await CallBiDirectionStreaming(channel);
@@ -43,15 +43,13 @@ namespace client
 
         public static void CallUnary(Channel channel){
             Console.WriteLine("Start Unary");
-            var client_greeter = new Greeter.GreeterClient(channel);
-            var request = new GreetRequest() {
-                Greeting = new Greeting(){
-                    FirstName = "Foo",
-                    LastName = "Bar"
-                }
+            var barcode_service = new UserCode.BarcodeService.BarcodeServiceClient(channel);
+            var filter = new UserCode.Filter()
+            {
+                Query = "{user_id:'10938432'}"
             };
-            var response = client_greeter.SayHello(request);
-            Console.WriteLine(response.Message);
+            var response = barcode_service.GetBarcode(filter);
+            Console.WriteLine($"{response.ToString()}");
             Console.WriteLine("End Unary");
         }
 

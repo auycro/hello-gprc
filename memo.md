@@ -48,6 +48,8 @@ $ dotnet new proto -n barcode
 
 ### Reference Repo
 
+live book (Microservices in .NET Core): https://github.com/horsdal/microservices-in-dotnetcore
+
 micro service: https://github.com/dotnet-architecture/eShopOnContainers
 
 istio dotnet sample: https://github.com/cushind/aspnetcore-istio
@@ -63,3 +65,5 @@ gRPC gateway:  https://github.com/grpc-ecosystem/grpc-gateway
 gRPC with Rest: https://docs.microsoft.com/en-us/aspnet/core/grpc/httpapi?view=aspnetcore-3.1
 
 gRPC with Rest: http://james.newtonking.com/archive/2020/03/31/introducing-grpc-http-api
+
+gRPC error code: http://avi.im/grpc-errors/
